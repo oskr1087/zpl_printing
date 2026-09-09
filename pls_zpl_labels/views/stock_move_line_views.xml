@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Formulario genérico de línea de movimiento -->
     <record id="view_move_line_form_pls_zpl" model="ir.ui.view">
         <field name="name">stock.move.line.form.pls.zpl</field>
         <field name="model">stock.move.line</field>
         <field name="inherit_id" ref="stock.view_move_line_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <group string="Etiqueta de Bulto Parcial">
-                    <field name="zpl_opening_date"/>
+                <field name="zpl_picking_type_code" invisible="1"/>
+                <group string="Datos de etiqueta">
+                    <field name="zpl_expiration_date"/>
+                    <field name="zpl_opening_date" invisible="zpl_picking_type_code != 'incoming'"/>
                     <field name="zpl_operator_id"/>
                 </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vista usada dentro del popup Operaciones detalladas de Odoo 19 -->
+    <record id="view_stock_move_line_operation_tree_pls_zpl" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.list.pls.zpl</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="zpl_expiration_date" string="Vence etiqueta" optional="show"/>
+                <field name="zpl_opening_date" string="Apertura" optional="show"/>
+                <field name="zpl_operator_id" string="Operador" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vista detallada de operaciones de stock.move.line -->
+    <record id="view_stock_move_line_detailed_operation_tree_pls_zpl" model="ir.ui.view">
+        <field name="name">stock.move.line.detailed.operations.list.pls.zpl</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="zpl_expiration_date" string="Vence etiqueta" optional="show"/>
+                <field name="zpl_opening_date" string="Apertura" optional="show"/>
+                <field name="zpl_operator_id" string="Operador" optional="show"/>
             </xpath>
         </field>
     </record>

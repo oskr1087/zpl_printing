@@ -1,4 +1,6 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+
+from .zpl_preview_utils import open_preview_wizard
 
 
 class StockLocation(models.Model):
@@ -10,10 +12,7 @@ class StockLocation(models.Model):
     pls_position = fields.Char(string="Posición")
 
     def _pls_build_location_name(self, values=None):
-        """Construye el nombre de ubicación con Pasillo + Columna + Nivel + Posición.
-
-        No se agregan separadores porque el formato requerido es, por ejemplo, A1C1N501.
-        """
+        """Pasillo + Columna + Nivel + Posición, por ejemplo A1C1N501."""
         self.ensure_one()
         values = values or {}
         parts = [
@@ -23,6 +22,12 @@ class StockLocation(models.Model):
             values.get("pls_position", self.pls_position),
         ]
         return "".join((part or "").strip().upper() for part in parts)
+
+    @api.onchange("pls_aisle", "pls_column", "pls_level", "pls_position")
+    def _onchange_pls_structure(self):
+        """Muestra el código final mientras el usuario captura la estructura."""
+        for location in self:
+            location.name = location._pls_build_location_name()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -44,8 +49,6 @@ class StockLocation(models.Model):
         if not structure_fields.intersection(vals):
             return super().write(vals)
 
-        # Cada ubicación puede tener una combinación distinta, por lo que se actualiza
-        # registro a registro evitando recursividad.
         for location in self:
             local_vals = dict(vals)
             generated_name = location._pls_build_location_name(local_vals)
@@ -53,3 +56,18 @@ class StockLocation(models.Model):
                 local_vals["name"] = generated_name
             super(StockLocation, location).write(local_vals)
         return True
+
+    def action_open_zpl_preview_location(self):
+        self.ensure_one()
+        return open_preview_wizard(
+            self,
+            label_type="location",
+            title=_("Imprimir etiqueta - Ubicación 4x6"),
+            report_xmlid="pls_zpl_labels.action_report_zpl_location",
+            width=4,
+            height=6,
+        )
+
+    def action_print_zpl_location(self):
+        self.ensure_one()
+        return self.env.ref("pls_zpl_labels.action_report_zpl_location").report_action(self)

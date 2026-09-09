@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_pls_zpl_labels" model="ir.ui.view">
+        <field name="name">stock.picking.form.pls.zpl.labels</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="pls_show_label_button" invisible="1"/>
+                <button name="action_open_pls_zpl_labels_preview"
+                        string="Imprimir etiquetas"
+                        type="object"
+                        icon="fa-print"
+                        class="btn-secondary"
+                        invisible="not pls_show_label_button"/>
+            </xpath>
+
+            <!-- Los datos son por línea, por eso se exponen en una pestaña propia
+                 del picking y no como campos globales de la transferencia. -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Datos de etiquetas" name="pls_zpl_label_data"
+                      invisible="picking_type_code not in ('incoming', 'outgoing')">
+                    <div class="alert alert-info" role="status">
+                        <span invisible="picking_type_code != 'incoming'">
+                            Complete por cada línea los datos requeridos para la etiqueta de Bulto Parcial.
+                        </span>
+                        <span invisible="picking_type_code != 'outgoing'">
+                            Revise por cada línea los datos utilizados en la etiqueta de Trazabilidad del Pedido.
+                        </span>
+                    </div>
+                    <field name="move_line_ids" nolabel="1" readonly="state == 'done'">
+                        <list editable="bottom" create="0" delete="0">
+                            <field name="product_id" readonly="1"/>
+                            <field name="lot_id" string="Lote" readonly="1" groups="stock.group_production_lot"/>
+                            <field name="lot_name" string="Lote" readonly="1" groups="stock.group_production_lot"/>
+                            <field name="quantity" string="Cantidad" readonly="1"/>
+                            <field name="product_uom_id" string="Unidad" readonly="1" groups="uom.group_uom"/>
+                            <field name="zpl_expiration_date" string="Vence etiqueta"/>
+                            <field name="zpl_opening_date" string="Apertura" column_invisible="parent.picking_type_code != 'incoming'"/>
+                            <field name="zpl_operator_id" string="Operador"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

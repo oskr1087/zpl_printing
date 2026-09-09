@@ -1,21 +1,8 @@
-# PLS ZPL Labels - Odoo 19
+# PLS Etiquetas ZPL
 
-Módulo de etiquetas PLS integrado con QZ Tray.
+Versión 19.0.1.7.1.
 
-## Dependencias
-- `qz_tray_base`
-- `qz_tray_report`
-- `stock`
-- `sale_stock`
-
-## Etiquetas
-1. **Bulto Parcial 4x2**: ZPL monocromo.
-2. **Ubicación 4x6**: QWeb PDF a color para impresión mediante QZ Tray.
-   - Pasillo: azul.
-   - Columna: verde.
-   - Nivel: naranja.
-   - Posición: morado.
-   - El nombre se forma automáticamente con esos cuatro campos.
-3. **Trazabilidad del Pedido 4x3**: ZPL monocromo.
-
-La etiqueta de ubicación no utiliza ZPL puro porque ZPL en impresoras térmicas Zebra convencionales es monocromático. Para preservar color se genera un PDF 4x6 y se envía por el flujo de impresión de QZ Tray.
+- Recepción validada: un botón **Imprimir etiquetas** abre vista previa de Bulto Parcial 4x2 para todas las líneas realizadas.
+- Entrega validada: el mismo botón abre vista previa de Trazabilidad del Pedido 4x3 para todas las líneas realizadas.
+- Ubicación: impresión ZPL 4x6 con vista previa a color.
+- Código de barras de Bulto Parcial y Trazabilidad ajustado para permanecer dentro del marco de la etiqueta.

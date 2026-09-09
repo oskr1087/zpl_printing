@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pls_zpl_label_preview_wizard_form" model="ir.ui.view">
+        <field name="name">pls.zpl.label.preview.wizard.form</field>
+        <field name="model">pls.zpl.label.preview.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Vista previa de etiqueta" create="0" edit="0" class="o_pls_zpl_preview_form">
+                <sheet>
+                    <field name="source_model" invisible="1"/>
+                    <field name="source_res_id" invisible="1"/>
+                    <field name="zpl_code" invisible="1"/>
+                    <div class="o_pls_preview_header mb-3">
+                        <div class="text-muted">
+                            <field name="label_type" class="d-inline" readonly="1"/>
+                            <span class="mx-2">•</span>
+                            <field name="source_name" class="d-inline" readonly="1"/>
+                        </div>
+                    </div>
+                    <div class="o_pls_preview_canvas">
+                        <field name="preview_image" widget="image" nolabel="1" class="o_pls_preview_image"/>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Imprimir" name="action_print_zpl" type="object" class="btn-primary" icon="fa-print"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
