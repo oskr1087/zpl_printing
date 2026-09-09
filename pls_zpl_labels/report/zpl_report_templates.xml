@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================================================================ -->
+    <!-- BULTO PARCIAL - 4 x 2 pulgadas - MONOCROMO / ZPL                -->
+    <!-- 300 dpi / 12 dpmm: 1200 x 600 dots                              -->
+    <!-- ================================================================ -->
+    <template id="report_zpl_partial_package">
+        <t t-foreach="docs" t-as="o"><t t-set="barcode" t-value="o._zpl_partial_barcode_value()"/>^XA
+^CI28
+^PW1200
+^LL600
+^LH0,0
+^FO25,20^GB1150,555,3^FS
+^FO45,40^A0N,32,32^FDPLS LOGISTICS^FS
+^FO780,32^GB350,62,2^FS
+^FO825,45^A0N,38,38^FDBULTO PARCIAL^FS
+^FO45,110^GB1090,2,2^FS
+^FO55,130^A0N,25,25^FDPRODUCTO^FS
+^FO55,165^A0N,45,45^FD<t t-esc="o.product_id.display_name"/>^FS
+^FO55,220^A0N,28,28^FD<t t-esc="o.product_id.default_code or ''"/>^FS
+^FO45,265^GB1090,2,2^FS
+^FO55,285^A0N,24,24^FDLOTE^FS
+^FO55,320^A0N,34,34^FD<t t-esc="o.lot_id.name or ''"/>^FS
+^FO315,285^A0N,24,24^FDVENCE^FS
+^FO315,320^A0N,34,34^FD<t t-esc="o._zpl_expiration_date_text()"/>^FS
+^FO575,285^A0N,24,24^FDCANTIDAD^FS
+^FO575,320^A0N,34,34^FD<t t-esc="'%g %s' % ((o.quantity or 0.0), (o.product_uom_id.name or ''))"/>^FS
+^FO825,285^A0N,24,24^FDAPERTURA^FS
+^FO825,320^A0N,34,34^FD<t t-esc="o._zpl_opening_date_text()"/>^FS
+^FO55,375^A0N,24,24^FDOPERADOR^FS
+^FO55,410^A0N,32,32^FD<t t-esc="o.zpl_operator_id.name or ''"/>^FS
+^FO860,370^BQN,2,4^FDLA,<t t-esc="barcode"/>^FS
+^FO55,465^BY3,2,72^BCN,72,N,N,N^FD<t t-esc="barcode"/>^FS
+^FO120,545^A0N,23,23^FD<t t-esc="barcode"/>^FS
+^XZ
+</t>
+    </template>
+
+    <!-- ================================================================ -->
+    <!-- UBICACION - 4 x 6 pulgadas - COLOR / QWEB PDF                    -->
+    <!-- Se imprime como PDF mediante QZ Tray para conservar los colores. -->
+    <!-- Pasillo azul, Columna verde, Nivel naranja, Posicion morado.      -->
+    <!-- ================================================================ -->
+    <template id="report_location_color_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="pls-location-label">
+                    <div class="pls-top">
+                        <div class="pls-brand">PLS LOGISTICS</div>
+                        <div class="pls-type">UBICACIÓN DE ALMACÉN</div>
+                    </div>
+
+                    <div class="pls-code-row" aria-label="Código de ubicación">
+                        <span class="pls-code-blue"><t t-esc="o.pls_aisle or ''"/></span><span class="pls-code-green"><t t-esc="o.pls_column or ''"/></span><span class="pls-code-orange"><t t-esc="o.pls_level or ''"/></span><span class="pls-code-purple"><t t-esc="o.pls_position or ''"/></span>
+                    </div>
+
+                    <div class="pls-barcode-wrap">
+                        <img t-att-src="'/report/barcode/Code128/%s?width=1050&amp;height=180&amp;humanreadable=0' % (o.name or '')" class="pls-barcode"/>
+                        <div class="pls-barcode-text"><t t-esc="o.name or ''"/></div>
+                    </div>
+
+                    <div class="pls-components">
+                        <div class="pls-box pls-blue">
+                            <div class="pls-box-title">PASILLO</div>
+                            <div class="pls-box-value"><t t-esc="o.pls_aisle or '-'"/></div>
+                        </div>
+                        <div class="pls-box pls-green">
+                            <div class="pls-box-title">COLUMNA</div>
+                            <div class="pls-box-value"><t t-esc="o.pls_column or '-'"/></div>
+                        </div>
+                        <div class="pls-box pls-orange">
+                            <div class="pls-box-title">NIVEL</div>
+                            <div class="pls-box-value"><t t-esc="o.pls_level or '-'"/></div>
+                        </div>
+                        <div class="pls-box pls-purple">
+                            <div class="pls-box-title">POSICIÓN</div>
+                            <div class="pls-box-value"><t t-esc="o.pls_position or '-'"/></div>
+                        </div>
+                    </div>
+
+                    <div class="pls-warning">
+                        <div class="pls-warning-title">IMPORTANTE</div>
+                        <div>VERIFIQUE SIEMPRE LA UBICACIÓN</div>
+                        <div>ANTES DE REALIZAR CUALQUIER MOVIMIENTO.</div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_location_color">
+        <t t-call="web.basic_layout">
+            <style>
+                @page { size: 4in 6in; margin: 0; }
+                html, body { margin: 0 !important; padding: 0 !important; }
+                .page { margin: 0 !important; padding: 0 !important; }
+                .pls-location-label {
+                    width: 4in;
+                    height: 6in;
+                    box-sizing: border-box;
+                    padding: 0.12in;
+                    font-family: Arial, Helvetica, sans-serif;
+                    color: #111;
+                    background: #fff;
+                    border: 2px solid #111;
+                    overflow: hidden;
+                }
+                .pls-top { text-align: center; }
+                .pls-brand {
+                    font-size: 10pt;
+                    font-weight: 700;
+                    letter-spacing: 1.2px;
+                    margin-bottom: 0.06in;
+                }
+                .pls-type {
+                    background: #0b4f8a;
+                    color: #fff;
+                    border-radius: 4px;
+                    padding: 0.07in 0.04in;
+                    font-size: 14pt;
+                    font-weight: 800;
+                    letter-spacing: .4px;
+                }
+                .pls-code-row {
+                    margin-top: 0.11in;
+                    text-align: center;
+                    font-size: 45pt;
+                    font-weight: 900;
+                    line-height: 1;
+                    letter-spacing: -2px;
+                    white-space: nowrap;
+                }
+                .pls-code-blue { color: #1167b1; }
+                .pls-code-green { color: #13853f; }
+                .pls-code-orange { color: #f47b20; }
+                .pls-code-purple { color: #7336a7; }
+                .pls-barcode-wrap {
+                    margin-top: 0.08in;
+                    text-align: center;
+                    border: 1px solid #aaa;
+                    border-radius: 5px;
+                    padding: 0.05in 0.04in 0.035in;
+                }
+                .pls-barcode { width: 3.45in; height: 0.58in; object-fit: fill; }
+                .pls-barcode-text {
+                    font-size: 14pt;
+                    font-weight: 800;
+                    letter-spacing: 3px;
+                    margin-top: 0.015in;
+                }
+                .pls-components {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                    border-spacing: 0.05in;
+                    margin-top: 0.08in;
+                }
+                .pls-box {
+                    display: table-cell;
+                    height: 0.95in;
+                    color: #fff;
+                    border-radius: 5px;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+                .pls-blue { background: #1167b1; }
+                .pls-green { background: #13853f; }
+                .pls-orange { background: #f47b20; }
+                .pls-purple { background: #7336a7; }
+                .pls-box-title { font-size: 9pt; font-weight: 800; }
+                .pls-box-value { font-size: 25pt; font-weight: 900; margin-top: 0.06in; }
+                .pls-warning {
+                    margin: 0.12in 0.03in 0;
+                    padding: 0.08in;
+                    background: #ffd51f;
+                    border: 1px solid #d2aa00;
+                    border-radius: 5px;
+                    text-align: center;
+                    font-size: 8.5pt;
+                    font-weight: 700;
+                    line-height: 1.25;
+                }
+                .pls-warning-title { font-size: 12pt; font-weight: 900; margin-bottom: 0.025in; }
+            </style>
+            <t t-call="pls_zpl_labels.report_location_color_document"/>
+        </t>
+    </template>
+
+    <!-- ================================================================ -->
+    <!-- TRAZABILIDAD DEL PEDIDO - 4 x 3 pulgadas - MONOCROMO / ZPL      -->
+    <!-- 300 dpi / 12 dpmm: 1200 x 900 dots                              -->
+    <!-- ================================================================ -->
+    <template id="report_zpl_traceability">
+        <t t-foreach="docs" t-as="o"><t t-set="line" t-value="o._zpl_primary_line()"/><t t-set="picking" t-value="o._zpl_picking()"/><t t-set="sale" t-value="o._zpl_sale_order()"/><t t-set="seq" t-value="o._zpl_package_sequence()"/><t t-set="barcode" t-value="o._zpl_barcode_value()"/>^XA
+^CI28
+^PW1200
+^LL900
+^LH0,0
+^FO25,20^GB1150,850,3^FS
+^FO45,38^A0N,30,30^FDPLS LOGISTICS^FS
+^FO390,32^GB520,65,2^FS
+^FO435,49^A0N,34,34^FDTRAZABILIDAD DEL PEDIDO^FS
+^FO45,120^GB1090,2,2^FS
+^FO55,145^A0N,22,22^FDPEDIDO No.^FS
+^FO55,178^A0N,31,31^FD<t t-esc="sale.name if sale else (picking.origin if picking else '')"/>^FS
+^FO420,145^A0N,22,22^FDCLIENTE^FS
+^FO420,178^A0N,31,31^FD<t t-esc="picking.partner_id.name if picking and picking.partner_id else ''"/>^FS
+^FO55,220^A0N,22,22^FDFECHA^FS
+^FO55,250^A0N,29,29^FD<t t-esc="picking.date_done.strftime('%d/%m/%Y') if picking and picking.date_done else ''"/>^FS
+^FO420,220^A0N,22,22^FDDESTINO^FS
+^FO420,250^A0N,29,29^FD<t t-esc="picking.partner_id.name if picking and picking.partner_id else ''"/>^FS
+^FO45,295^GB1090,2,2^FS
+^FO55,320^A0N,22,22^FDPRODUCTO^FS
+^FO55,352^A0N,31,31^FD<t t-esc="line.product_id.display_name if line else ''"/>^FS
+^FO55,395^A0N,22,22^FDSKU^FS
+^FO180,395^A0N,27,27^FD<t t-esc="line.product_id.default_code if line else ''"/>^FS
+^FO600,395^A0N,22,22^FDLOTE^FS
+^FO700,395^A0N,27,27^FD<t t-esc="line.lot_id.name if line and line.lot_id else ''"/>^FS
+^FO55,435^A0N,22,22^FDVENCE^FS
+^FO180,435^A0N,27,27^FD<t t-esc="line._zpl_expiration_date_text() if line else ''"/>^FS
+^FO600,435^A0N,22,22^FDCANTIDAD^FS
+^FO770,435^A0N,27,27^FD<t t-esc="'%g' % sum(o._zpl_move_lines().mapped('quantity'))"/>^FS
+^FO45,480^GB1090,2,2^FS
+^FO55,505^A0N,22,22^FDBULTO^FS
+^FO180,505^A0N,30,30^FD<t t-esc="'%02d DE %02d' % seq"/>^FS
+^FO420,505^A0N,22,22^FDPESO^FS
+^FO535,505^A0N,30,30^FD<t t-esc="'%.2f Kg' % o._zpl_total_weight()"/>^FS
+^FO750,505^A0N,22,22^FDPICKING^FS
+^FO890,505^A0N,27,27^FD<t t-esc="picking.name if picking else ''"/>^FS
+^FO55,555^A0N,22,22^FDPACKING^FS
+^FO180,555^A0N,27,27^FD<t t-esc="o.name or ''"/>^FS
+^FO420,555^A0N,22,22^FDOPERADOR^FS
+^FO585,555^A0N,27,27^FD<t t-esc="o.zpl_operator_id.name or ''"/>^FS
+^FO850,555^A0N,22,22^FDHORA^FS
+^FO950,555^A0N,27,27^FD<t t-esc="picking.date_done.strftime('%H:%M') if picking and picking.date_done else ''"/>^FS
+^FO45,610^GB1090,2,2^FS
+^FO65,645^BY3,2,95^BCN,95,N,N,N^FD<t t-esc="barcode"/>^FS
+^FO135,755^A0N,24,24^FD<t t-esc="barcode"/>^FS
+^FO875,640^BQN,2,5^FDLA,<t t-esc="barcode"/>^FS
+^FO910,800^A0N,20,20^FDESCANEAR^FS
+^FO895,825^A0N,20,20^FDTRAZABILIDAD^FS
+^XZ
+</t>
+    </template>
+</odoo>

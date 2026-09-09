@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_zpl_partial_package" model="ir.actions.report">
+        <field name="name">Etiqueta - Bulto Parcial 4x2</field>
+        <field name="model">stock.move.line</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">pls_zpl_labels.report_zpl_partial_package</field>
+        <field name="report_file">pls_zpl_labels.report_zpl_partial_package</field>
+        <field name="binding_model_id" ref="stock.model_stock_move_line"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- La ubicación se genera como PDF a color. qz_tray_report se encarga del flujo de impresión QZ. -->
+    <record id="action_report_location_color" model="ir.actions.report">
+        <field name="name">Etiqueta - Ubicación PLS 4x6 Color</field>
+        <field name="model">stock.location</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pls_zpl_labels.report_location_color</field>
+        <field name="report_file">pls_zpl_labels.report_location_color</field>
+        <field name="binding_model_id" ref="stock.model_stock_location"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Ubicacion_%s' % (object.name or '')</field>
+    </record>
+
+    <record id="action_report_zpl_traceability" model="ir.actions.report">
+        <field name="name">Etiqueta - Trazabilidad Pedido 4x3</field>
+        <field name="model">stock.quant.package</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">pls_zpl_labels.report_zpl_traceability</field>
+        <field name="report_file">pls_zpl_labels.report_zpl_traceability</field>
+        <field name="binding_model_id" ref="stock.model_stock_quant_package"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

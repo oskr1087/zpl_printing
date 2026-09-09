@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_form_pls_zpl" model="ir.ui.view">
+        <field name="name">stock.move.line.form.pls.zpl</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Etiqueta de Bulto Parcial">
+                    <field name="zpl_opening_date"/>
+                    <field name="zpl_operator_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
