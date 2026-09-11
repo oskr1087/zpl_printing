@@ -6,3 +6,5 @@ Versión 19.0.1.7.1.
 - Entrega validada: el mismo botón abre vista previa de Trazabilidad del Pedido 4x3 para todas las líneas realizadas.
 - Ubicación: impresión ZPL 4x6 con vista previa a color.
 - Código de barras de Bulto Parcial y Trazabilidad ajustado para permanecer dentro del marco de la etiqueta.
+
+- La etiqueta de Ubicación 4x6 ahora se previsualiza e imprime únicamente en blanco y negro.

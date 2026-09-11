@@ -1,6 +1,6 @@
 {
     "name": "PLS Etiquetas ZPL",
-    "version": "19.0.1.7.2",
+    "version": "19.0.1.7.3",
     "summary": "Etiquetas ZPL de bulto parcial, ubicaciones y trazabilidad",
     "category": "Inventory/Inventory",
     "author": "Oscar Morocho",

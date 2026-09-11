@@ -46,7 +46,7 @@
 
     <!-- ================================================================ -->
     <!-- UBICACION - 4 x 6 pulgadas - ZPL / QWEB-TEXT                   -->
-    <!-- Vista previa a color; ZPL físico mantiene geometría monocroma.   -->
+    <!-- Vista previa e impresión en blanco y negro.                       -->
     <!-- ================================================================ -->
     <template id="report_zpl_location">
         <t t-foreach="docs" t-as="o"><t t-set="barcode" t-value="o.name or ''"/>^XA
